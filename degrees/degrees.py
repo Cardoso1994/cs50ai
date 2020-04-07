@@ -70,12 +70,10 @@ def main():
     print("Data loaded.")
 
     # get the id's for the name passed via input
-    # source = person_id_for_name(input("Name: "))
-    source = person_id_for_name("Tom Cruise")
+    source = person_id_for_name(input("Name: "))
     if source is None:
         sys.exit("Person not found.")
-    # target = person_id_for_name(input("Name: "))
-    target = person_id_for_name("Cary Elwes")
+    target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
