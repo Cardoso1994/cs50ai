@@ -1,5 +1,6 @@
 import csv
 import sys
+from collections import deque
 
 from util import Node, StackFrontier, QueueFrontier
 
@@ -69,10 +70,18 @@ def main():
     print("Data loaded.")
 
     # get the id's for the name passed via input
-    source = person_id_for_name(input("Name: "))
+    # source = person_id_for_name(input("Name: "))
+    # Added by Cardoso. MUST remove
+    source = "Jennifer Lawrence"
+    # source = "Cary Elwes"
+    # source = "Tom Cruise"
+    # source = "Kevin Bacon"
     if source is None:
         sys.exit("Person not found.")
-    target = person_id_for_name(input("Name: "))
+    # Added by Cardoso. MUST remove
+    target = "Tom Hanks"
+    target = "Tom Cruise"
+    # target = person_id_for_name(input("Name: "))
     if target is None:
         sys.exit("Person not found.")
 
@@ -100,8 +109,69 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    # TODO
-    raise NotImplementedError
+    source_id = person_id_for_name(source)
+    target_id = person_id_for_name(target)
+
+    # create a Queue and an explored set
+    tree = QueueFrontier()
+    explored = set()
+
+    neighbors = neighbors_curated(source_id)
+    for neighbor in neighbors:
+        #                   source_id, neighbor_id, movie_id
+        tree.add(Node(state=(source_id, neighbor[1], neighbor[0]),
+                      parent=None, action=neighbor))
+
+    # BFS search to Kevin Bacon. Does nothing if Kevin Bacon is Source
+    current = tree.remove()
+    while True and source_id != '102':
+        # current = tree.remove()
+        explored.add(current.state)
+        if is_kevin_bacon(current.action[1]):
+            print('\n\nit is kevin MoFo\n\n')
+            break
+
+        neighbors = neighbors_curated(current.action[1])
+        for neighbor in neighbors:
+            # add nodes to tree if they aren't already explored
+            if not is_in_set((current.action[1], neighbor[1], neighbor[0]),
+                         explored):
+                tree.add(Node(state=(current.action[1], neighbor[1],
+                                     neighbor[0]),
+                      parent=current, action=neighbor))
+        current = tree.remove()
+
+    # sanity check in case Kevin Bacon is source
+    if source_id != '102':
+        tree = QueueFrontier()
+    else:
+        current = tree.remove()
+
+    # BFS to search for target
+    while True:
+        if current.action[1] == target_id:
+            print(f"\n\nit is {target} MoFo\n\n")
+            break
+
+        neighbors = neighbors_curated(current.action[1])
+        for neighbor in neighbors:
+            # add nodes to tree frontier if they aren't already explored
+            if not is_in_set((current.action[1], neighbor[1], neighbor[0]),
+                         explored):
+                tree.add(Node(state=(current.action[1], neighbor[1],
+                                     neighbor[0]),
+                      parent=current, action=neighbor))
+
+        current = tree.remove()
+
+    path = deque()
+    while current is not None:
+        print(f"{people[current.action[1]]['name']} ->", end=" ")
+        path.appendleft(current.action)
+        current = current.parent
+
+    print(f"{people[source_id]['name']}")
+    print(path)
 
 
 def person_id_for_name(name):
@@ -135,12 +205,54 @@ def neighbors_for_person(person_id):
     Returns (movie_id, person_id) pairs for people
     who starred with a given person.
     """
+
     movie_ids = people[person_id]["movies"]
     neighbors = set()
     for movie_id in movie_ids:
         for person_id in movies[movie_id]["stars"]:
             neighbors.add((movie_id, person_id))
     return neighbors
+
+
+def neighbors_curated(person_id):
+    """
+    Returns (movie_id, person_id) pairs for people
+    who starred with a given person, without repeating the given person
+    """
+
+    movie_ids = people[person_id]["movies"]
+    neighbors = set()
+    for movie_id in movie_ids:
+        for person_id_ in movies[movie_id]["stars"]:
+            if not person_id_ == person_id:
+                neighbors.add((movie_id, person_id_))
+    return (neighbors)
+
+
+def is_in_set(connection, explored):
+    """
+    Checks if a connection between two people has already been explored
+    """
+
+    for node in explored:
+        if connection[0] in node and\
+            connection[1] in node and\
+            connection[2] in node:
+                return True
+
+    return False
+
+
+def is_kevin_bacon(person_id):
+    """
+    Checks if a person is Kevin Bacon
+    """
+
+    kevin_id = '102'
+    if person_id == kevin_id:
+        return True
+
+    return False
 
 
 if __name__ == "__main__":
