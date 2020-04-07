@@ -71,17 +71,11 @@ def main():
 
     # get the id's for the name passed via input
     # source = person_id_for_name(input("Name: "))
-    # Added by Cardoso. MUST remove
-    source = "Jennifer Lawrence"
-    # source = "Cary Elwes"
-    # source = "Tom Cruise"
-    # source = "Kevin Bacon"
+    source = person_id_for_name("Tom Cruise")
     if source is None:
         sys.exit("Person not found.")
-    # Added by Cardoso. MUST remove
-    target = "Tom Hanks"
-    target = "Tom Cruise"
     # target = person_id_for_name(input("Name: "))
+    target = person_id_for_name("Cary Elwes")
     if target is None:
         sys.exit("Person not found.")
 
@@ -109,26 +103,22 @@ def shortest_path(source, target):
     If no possible path, returns None.
     """
 
-    source_id = person_id_for_name(source)
-    target_id = person_id_for_name(target)
-
     # create a Queue and an explored set
     tree = QueueFrontier()
     explored = set()
 
-    neighbors = neighbors_curated(source_id)
+    neighbors = neighbors_curated(source)
     for neighbor in neighbors:
         #                   source_id, neighbor_id, movie_id
-        tree.add(Node(state=(source_id, neighbor[1], neighbor[0]),
+        tree.add(Node(state=(source, neighbor[1], neighbor[0]),
                       parent=None, action=neighbor))
 
     # BFS search to Kevin Bacon. Does nothing if Kevin Bacon is Source
     current = tree.remove()
-    while True and source_id != '102':
+    while True and source != '102':
         # current = tree.remove()
         explored.add(current.state)
         if is_kevin_bacon(current.action[1]):
-            print('\n\nit is kevin MoFo\n\n')
             break
 
         neighbors = neighbors_curated(current.action[1])
@@ -142,15 +132,14 @@ def shortest_path(source, target):
         current = tree.remove()
 
     # sanity check in case Kevin Bacon is source
-    if source_id != '102':
+    if source != '102':
         tree = QueueFrontier()
     else:
         current = tree.remove()
 
     # BFS to search for target
     while True:
-        if current.action[1] == target_id:
-            print(f"\n\nit is {target} MoFo\n\n")
+        if current.action[1] == target:
             break
 
         neighbors = neighbors_curated(current.action[1])
@@ -166,12 +155,10 @@ def shortest_path(source, target):
 
     path = deque()
     while current is not None:
-        print(f"{people[current.action[1]]['name']} ->", end=" ")
         path.appendleft(current.action)
         current = current.parent
 
-    print(f"{people[source_id]['name']}")
-    print(path)
+    return (list(path))
 
 
 def person_id_for_name(name):
