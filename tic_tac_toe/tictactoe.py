@@ -62,7 +62,7 @@ def result(board, action):
     """
     Returns the board that results from making move (i, j) on the board.
     """
-    print(action)
+
     board_ = deepcopy(board)
     if board_[action[0]][action[1]] == EMPTY:
         board_[action[0]][action[1]] = player(board)
@@ -145,22 +145,22 @@ def minimax(board):
     # get possible actions
     actions_ = actions(board)
 
-    if player is X:
-        _maximize(board, actions_)
-
+    if player_ == X:
+        (value, action_) = _maximize(board, actions_)
     else:
-        _minimize(board, actions)
+        (value, action_) = _minimize(board, actions_)
+
+    return action_
 
 
-
-def _maximize(board, actions):
+def _maximize(board, actions_):
     """
     tries to maximize the score of the game
     Returns the best possible outcome, 1, 0 or -1, in that order
     """
     best = (-math.inf, ())
 
-    for action_ in actions:
+    for action_ in actions_:
         current_board = result(board, action_)
         if terminal(current_board):
             return (utility(current_board), action_)
@@ -173,10 +173,27 @@ def _maximize(board, actions):
         elif result_min[0] > best[0]:
             best = (result_min[0], action_)
 
+    return best
 
 
-def _minimize:
+def _minimize(board, actions_):
     """
     tries to minimize the score of the game
+    Returns the best possible outcome, -1, 0 or 1, in that order
     """
-    pass
+    best = (math.inf, ())
+
+    for action_ in actions_:
+        current_board = result(board, action_)
+        if terminal(current_board):
+            return (utility(current_board), action_)
+
+        actions_max = actions(current_board)
+        result_max = _maximize(current_board, actions_max)
+
+        if result_max[0] == -1:
+            return (-1, action_)
+        elif result_max[0] < best[0]:
+            best = (result_max[0], action_)
+
+    return best
