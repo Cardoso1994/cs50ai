@@ -56,7 +56,8 @@ def actions(board):
             if val is None:
                 moves.add((indx_row, indx_val))
 
-    return (moves)
+    return moves
+
 
 def result(board, action):
     """
