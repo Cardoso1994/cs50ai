@@ -8,6 +8,10 @@ HEIGHT = 8
 WIDTH = 8
 MINES = 8
 
+HEIGHT = 12
+WIDTH = 10
+MINES = 26
+
 # Colors
 BLACK = (0, 0, 0)
 GRAY = (180, 180, 180)
