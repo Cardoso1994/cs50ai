@@ -109,8 +109,8 @@ class Sentence():
         # if all the cells are mines or none of them are mines
         if self.count == len(self.cells):
             return self.cells
-        elif self.count == 0:
-            return set()
+
+        return set()
 
     def known_safes(self):
         """
@@ -119,9 +119,8 @@ class Sentence():
         # if all the cells are mines or none of them are mines
         if self.count == 0:
             return self.cells
-        if self.count == len(self.cells):
-            return set()
 
+        return set()
 
     def mark_mine(self, cell):
         """
@@ -136,6 +135,7 @@ class Sentence():
             self.count -= 1
 
         return
+
 
     def mark_safe(self, cell):
         """
@@ -238,10 +238,12 @@ class MinesweeperAI():
             current_sentence.cells.discard(safe)
 
         # check if all cells are either safes or mines
-        if current_sentence.count == 0:
-            current_safes.update(current_sentence.cells)
-        elif current_sentence.count == len(current_sentence.cells):
-            current_mines.update(current_sentence.cells)
+        current_safes.update(current_sentence.known_safes())
+        current_mines.update(current_sentence.known_mines())
+        # if current_sentence.count == 0:
+        #     current_safes.update(current_sentence.cells)
+        # elif current_sentence.count == len(current_sentence.cells):
+        #     current_mines.update(current_sentence.cells)
 
         # add sentence to knowledge
         self.knowledge.append(current_sentence)
