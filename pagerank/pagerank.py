@@ -8,16 +8,6 @@ SAMPLES = 10000
 
 
 def main():
-    corpus = { "1.html": {"2.html", "3.html"},
-            "2.html": {"3.html"}, "3.html": {"2.html"}
-            }
-    page = "1.html"
-    print(transition_model(corpus, page, DAMPING))
-    exit()
-
-
-
-
     if len(sys.argv) != 2:
         sys.exit("Usage: python pagerank.py corpus")
     corpus = crawl(sys.argv[1])
@@ -25,6 +15,7 @@ def main():
     print(f"PageRank Results from Sampling (n = {SAMPLES})")
     for page in sorted(ranks):
         print(f"  {page}: {ranks[page]:.4f}")
+    exit()
     ranks = iterate_pagerank(corpus, DAMPING)
     print(f"PageRank Results from Iteration")
     for page in sorted(ranks):
@@ -69,12 +60,21 @@ def transition_model(corpus, page, damping_factor):
     """
 
     # create an empty dict for transition model
-    transition_mod = {}
+    transition_mod = dict.fromkeys(corpus, 0)
+    corpus_len = len(corpus)
+
+    # if there is no way out of page
+    if not corpus[page]:
+        prob = 1 / corpus_len
+        for _page in corpus:
+            transition_mod[_page] += prob
+
+        return transition_mod
 
     # compute random P of whole corpues
-    random_corpus = (1 - damping_factor) / len(corpus)
+    random_corpus = (1 - damping_factor) / corpus_len
     for _page in corpus:
-        transition_mod[_page] = random_corpus
+        transition_mod[_page] += random_corpus
 
     # compute P of links in page
     linked = len(corpus[page])
@@ -94,7 +94,18 @@ def sample_pagerank(corpus, damping_factor, n):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
+
+    sample_dict = dict.fromkeys(corpus, 0)
+    page = random.choice(list(corpus))
+
+    # iterate over the total ammount of samples
+    for sample in range(n):
+        sample_dict[page] += 1 / n
+        trans_mod = transition_model(corpus, page, damping_factor)
+        page = str((random.choices(population= list(trans_mod),
+                weights=list(trans_mod.values()), k=1))[0])
+
+    return sample_dict
 
 
 def iterate_pagerank(corpus, damping_factor):
