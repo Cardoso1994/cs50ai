@@ -8,6 +8,16 @@ SAMPLES = 10000
 
 
 def main():
+    corpus = { "1.html": {"2.html", "3.html"},
+            "2.html": {"3.html"}, "3.html": {"2.html"}
+            }
+    page = "1.html"
+    print(transition_model(corpus, page, DAMPING))
+    exit()
+
+
+
+
     if len(sys.argv) != 2:
         sys.exit("Usage: python pagerank.py corpus")
     corpus = crawl(sys.argv[1])
@@ -57,7 +67,22 @@ def transition_model(corpus, page, damping_factor):
     linked to by `page`. With probability `1 - damping_factor`, choose
     a link at random chosen from all pages in the corpus.
     """
-    raise NotImplementedError
+
+    # create an empty dict for transition model
+    transition_mod = {}
+
+    # compute random P of whole corpues
+    random_corpus = (1 - damping_factor) / len(corpus)
+    for _page in corpus:
+        transition_mod[_page] = random_corpus
+
+    # compute P of links in page
+    linked = len(corpus[page])
+    random_linked = damping_factor / linked
+    for _page in corpus[page]:
+        transition_mod[_page] += random_linked
+
+    return transition_mod
 
 
 def sample_pagerank(corpus, damping_factor, n):
