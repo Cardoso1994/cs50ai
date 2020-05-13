@@ -125,6 +125,9 @@ def iterate_pagerank(corpus, damping_factor):
 
     linked_from = {_page: {'pages':set(), 'len':0} for _page in corpus}
 
+    for _page in corpus:
+        if not corpus[_page]:
+            corpus[_page] = set(corpus.keys())
     # initial setup
     # also computing the inverse of corpus a dict that holds for each page,
     # what other pages link to it
