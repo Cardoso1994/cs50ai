@@ -12,6 +12,8 @@ Search algorithms explained
 
 #### Degrees
 - [Degrees project](./degrees)
+
+
 Based on the "Six Degrees of Kevin Bacon" which states that any hollywood actor
 can be connected to Kevin Bacon within a chain of six movies.
 
@@ -23,6 +25,8 @@ shortest path is key
 
 #### Tic-Tac-Toe
 - [Tic-Tac-Toe project](./tictactoe)
+
+
 Implements a minimax algorithm to play the classic
 Tic-Tac-Toe game against an AI.
 
