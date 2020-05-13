@@ -2,6 +2,7 @@ import os
 import random
 import re
 import sys
+from copy import deepcopy
 
 DAMPING = 0.85
 SAMPLES = 10000
@@ -15,7 +16,6 @@ def main():
     print(f"PageRank Results from Sampling (n = {SAMPLES})")
     for page in sorted(ranks):
         print(f"  {page}: {ranks[page]:.4f}")
-    exit()
     ranks = iterate_pagerank(corpus, DAMPING)
     print(f"PageRank Results from Iteration")
     for page in sorted(ranks):
@@ -71,7 +71,7 @@ def transition_model(corpus, page, damping_factor):
 
         return transition_mod
 
-    # compute random P of whole corpues
+    # compute random P of whole corpus
     random_corpus = (1 - damping_factor) / corpus_len
     for _page in corpus:
         transition_mod[_page] += random_corpus
@@ -95,17 +95,17 @@ def sample_pagerank(corpus, damping_factor, n):
     PageRank values should sum to 1.
     """
 
-    sample_dict = dict.fromkeys(corpus, 0)
+    pagerank_sample = dict.fromkeys(corpus, 0)
     page = random.choice(list(corpus))
 
     # iterate over the total ammount of samples
     for sample in range(n):
-        sample_dict[page] += 1 / n
+        pagerank_sample[page] += 1 / n
         trans_mod = transition_model(corpus, page, damping_factor)
         page = str((random.choices(population= list(trans_mod),
                 weights=list(trans_mod.values()), k=1))[0])
 
-    return sample_dict
+    return pagerank_sample
 
 
 def iterate_pagerank(corpus, damping_factor):
@@ -117,8 +117,46 @@ def iterate_pagerank(corpus, damping_factor):
     their estimated PageRank value (a value between 0 and 1). All
     PageRank values should sum to 1.
     """
-    raise NotImplementedError
 
+    # function variables
+    pagerank_it = dict.fromkeys(corpus, 0)
+    corpus_len = len(corpus)
+    convergence = 0.001
+
+    linked_from = {_page: {'pages':set(), 'len':0} for _page in corpus}
+
+    # initial setup
+    # also computing the inverse of corpus a dict that holds for each page,
+    # what other pages link to it
+    prob = 1 / corpus_len
+    for _page in corpus:
+        pagerank_it[_page] = prob
+        for _page_1 in corpus:
+            if _page in corpus[_page_1]:
+                linked_from[_page]['pages'].add(_page_1)
+                linked_from[_page]['len'] += 1
+
+
+    # iterative process
+    first_term = (1 - damping_factor) / corpus_len
+    while True:
+        error = -0.02
+        for _page in corpus:
+            prev_rank = pagerank_it[_page]
+            pagerank_it[_page] = first_term
+            for _page_1 in linked_from[_page]['pages']:
+                pagerank_it[_page] += pagerank_it[_page_1] \
+                        / len(corpus[_page_1]) * damping_factor
+
+            post_rank = pagerank_it[_page]
+            diff = abs(post_rank - prev_rank)
+            if diff > error:
+                error = diff
+
+        if error < convergence:
+            break
+
+    return pagerank_it
 
 if __name__ == "__main__":
     main()
