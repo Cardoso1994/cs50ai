@@ -15,7 +15,7 @@ Search algorithms explained
 - Tic-Tac-Toe
 
 #### Degrees
-- [Degrees sourcel code](./degrees)
+- [Degrees source code](./degrees)
 - [Degrees project](https://cs50.harvard.edu/ai/2020/projects/0/degrees/)
 
 
@@ -29,7 +29,7 @@ This implementents a BFS search algorithm which is suitable for cases where the
 shortest path is key
 
 #### Tic-Tac-Toe
-- [Tic-Tac-Toe ource code](./tictactoe)
+- [Tic-Tac-Toe source code](./tictactoe)
 - [Tic-Tac-Toe project](https://cs50.harvard.edu/ai/2020/projects/0/tictactoe/)
 
 
