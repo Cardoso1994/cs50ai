@@ -11,6 +11,7 @@ Search algorithms explained
 - Tic-Tac-Toe
 
 #### Degrees
+- [Degrees project](./degrees)
 Based on the "Six Degrees of Kevin Bacon" which states that any hollywood actor
 can be connected to Kevin Bacon within a chain of six movies.
 
@@ -21,6 +22,7 @@ This implementents a BFS search algorithm which is suitable for cases where the
 shortest path is key
 
 #### Tic-Tac-Toe
+- [Tic-Tac-Toe project](./tictactoe)
 Implements a minimax algorithm to play the classic
 Tic-Tac-Toe game against an AI.
 
