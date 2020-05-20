@@ -14,18 +14,21 @@ PROBS = {
     "trait": {
 
         # Probability of trait given two copies of gene
+        # P(trait | gene=2)
         2: {
             True: 0.65,
             False: 0.35
         },
 
         # Probability of trait given one copy of gene
+        # P(trait | gene=1)
         1: {
             True: 0.56,
             False: 0.44
         },
 
         # Probability of trait given no gene
+        # P(trait | gene=0)
         0: {
             True: 0.01,
             False: 0.99
@@ -133,13 +136,99 @@ def joint_probability(people, one_gene, two_genes, have_trait):
     Compute and return a joint probability.
 
     The probability returned should be the probability that
-        * everyone in set `one_gene` has one copy of the gene, and
-        * everyone in set `two_genes` has two copies of the gene, and
-        * everyone not in `one_gene` or `two_gene` does not have the gene, and
-        * everyone in set `have_trait` has the trait, and
+        * everyone in set `one_gene` has one copy of the gene, AND
+        * everyone in set `two_genes` has two copies of the gene, AND
+        * everyone not in `one_gene` or `two_gene` does not have the gene, AND
+        * everyone in set `have_trait` has the trait, AND
         * everyone not in set` have_trait` does not have the trait.
     """
-    raise NotImplementedError
+    # initial value of joint probability
+    joint_p = 1
+
+    # get people for zero genes
+    people_names = set(people.keys())
+    zero_genes  = people_names - (one_gene | two_genes)
+
+    # dict that tells us the inverse of the sets above.
+    # i.e. each people -> how many genes it has
+    # and if they have the trait or not
+    people_genes = {person:{'gene':None, 'trait':False}
+                    for person in people_names
+                   }
+
+    # this dict has the probability of passing a bad gene depending on how many
+    # genes a person has. This is the prob of a parent passing a gene
+    probs_hereditary = {
+            2: {1:0.99, 0:0.01},
+            1: {1:0.5, 0:0.5},
+            0: {1:0.01, 0:0.99},
+            }
+
+    # filling people_genes
+    for person in zero_genes:
+        people_genes[person]['gene'] = 0
+        if person in have_trait:
+            people_genes[person]['trait'] = True
+    for person in one_gene:
+        people_genes[person]['gene'] = 1
+        if person in have_trait:
+            people_genes[person]['trait'] = True
+    for person in two_genes:
+        people_genes[person]['gene'] = 2
+        if person in have_trait:
+            people_genes[person]['trait'] = True
+
+    # computing joint prob for zero genes people
+    # the product of the probability of each parent not passing the gene
+    for person in zero_genes:
+        particular_joint = 1
+        mother = people[person]['mother']
+        father = people[person]['father']
+        if mother is None:
+            particular_joint *= PROBS['gene'][0]
+        else:
+            particular_joint *= \
+                (probs_hereditary[people_genes[mother]['gene']][0]
+                        * probs_hereditary[people_genes[father]['gene']][0])
+
+        particular_joint *= PROBS['trait'][0][people_genes[person]['trait']]
+        joint_p *= particular_joint
+
+    # computing joint prob for one gene
+    # the sum of two cases, either mother and not father, or father and not
+    #   mother
+    for person in one_gene:
+        particular_joint = 1
+        mother = people[person]['mother']
+        father = people[person]['father']
+        if mother is None:
+            particular_joint *= PROBS['gene'][1]
+        else:
+            from_mother = (probs_hereditary[people_genes[mother]['gene']][1]
+                    * probs_hereditary[people_genes[father]['gene']][0])
+            from_father = (probs_hereditary[people_genes[mother]['gene']][0]
+                    * probs_hereditary[people_genes[father]['gene']][1])
+            particular_joint *= (from_mother + from_father)
+
+        particular_joint *= PROBS['trait'][1][people_genes[person]['trait']]
+        joint_p *= particular_joint
+
+    # computing joint prob for two genes
+    # each parent passes one gene
+    for person in two_genes:
+        particular_joint = 1
+        mother = people[person]['mother']
+        father = people[person]['father']
+        if mother is None:
+            particular_joint *= PROBS['gene'][2]
+        else:
+            particular_joint *= \
+                (probs_hereditary[people_genes[mother]['gene']][1]
+                        * probs_hereditary[people_genes[father]['gene']][1])
+        particular_joint *= PROBS['trait'][2][people_genes[person]['trait']]
+        joint_p *= particular_joint
+
+    return joint_p
 
 
 def update(probabilities, one_gene, two_genes, have_trait, p):
@@ -149,7 +238,21 @@ def update(probabilities, one_gene, two_genes, have_trait, p):
     Which value for each distribution is updated depends on whether
     the person is in `have_gene` and `have_trait`, respectively.
     """
-    raise NotImplementedError
+    people_names = set(probabilities.keys())
+    zero_genes = people_names - (one_gene | two_genes)
+
+    for person in people_names:
+        if person in zero_genes:
+            probabilities[person]['gene'][0] += p
+        elif person in one_gene:
+            probabilities[person]['gene'][1] += p
+        elif person in two_genes:
+            probabilities[person]['gene'][2] += p
+
+        if person in have_trait:
+            probabilities[person]['trait'][True] += p
+        else:
+            probabilities[person]['trait'][False] += p
 
 
 def normalize(probabilities):
@@ -157,8 +260,18 @@ def normalize(probabilities):
     Update `probabilities` such that each probability distribution
     is normalized (i.e., sums to 1, with relative proportions the same).
     """
-    raise NotImplementedError
 
+    for _ in probabilities:
+        alpha = (probabilities[_]['gene'][1] + probabilities[_]['gene'][2]
+            + probabilities[_]['gene'][0]) ** -1
+        probabilities[_]['gene'][0] *= alpha
+        probabilities[_]['gene'][1] *= alpha
+        probabilities[_]['gene'][2] *= alpha
+
+        alpha = (probabilities[_]['trait'][True] +
+                    probabilities[_]['trait'][False]) ** -1
+        probabilities[_]['trait'][True] *= alpha
+        probabilities[_]['trait'][False] *= alpha
 
 if __name__ == "__main__":
     main()
