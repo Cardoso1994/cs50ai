@@ -67,7 +67,7 @@ based on the rules of the game, as well as the sentences that each character
 "says", this sentences must be expressed in terms of propositional logic.
 #### Minesweeper
 - [Minesweeper source code](./minsweeper)
-- [Knights project](https://cs50.harvard.edu/ai/2020/projects/1/minesweeper/)
+- [Minesweeper project](https://cs50.harvard.edu/ai/2020/projects/1/minesweeper/)
 
 An AI must be capable of playing the minesweeper game, an ideally winning.
 The "knowledge" obtained in every move comes from the rules of the games, in
