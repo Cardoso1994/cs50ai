@@ -65,6 +65,7 @@ knave always lies.
 The point is that for the AI to find out who is a Knight and who is a Knave,
 based on the rules of the game, as well as the sentences that each character
 "says", this sentences must be expressed in terms of propositional logic.
+
 #### Minesweeper
 - [Minesweeper source code](./minsweeper)
 - [Minesweeper project](https://cs50.harvard.edu/ai/2020/projects/1/minesweeper/)
@@ -78,3 +79,49 @@ The AI then, saves information about the neighbouring cells represented in a
 sum, where the sum of all the cells is equal to the value given by the
 discovered cell. As the game goes by, the AI must be capable of produce NEW
 KNOWLEDGE based on previous and recently discovered knowledge.
+
+
+## Lecture 2 - Uncertainty
+Algorithms based on probability. Bayesian Networks as well as Markov Chains.
+Revision of probability concepts such as:
+- Conditional Probability
+- Unconditional Probability
+- Baye's Theorem
+- Joint Probability
+
+### CS50 Resources
+- [Whole Resources](https://cs50.harvard.edu/ai/2020/weeks/2/)
+
+### Related Notes
+- [Lecture 2 - Probability](./lectures/lecture_1_probability.md)
+- [Lecture 2 - Uncertainty](./lectures/lecture_1_uncertainty.md)
+
+#### Realted problem sets
+- PageRank
+- Heredity
+
+#### PageRank
+- [PageRank source code](./pagerank)
+- [PageRank project](https://cs50.harvard.edu/ai/2020/projects/2/pagerank/)
+
+Uses google's PageRank algorithm to determine which page is more valuable than
+the others given a set of web pages. In this case the `importance` of a
+particular website has a value between `0` and `1`, and this result is analogous of
+thinking about the probability of a given user ending up on a certain site.
+
+It has two approaches, it is solved via a Markov Chain for `n` given states. It
+can also be solved with an iterative process that ends when certain convergence
+criteria is met, for example, when the values of importance for each page
+changes in no more that `0.02` in relation with those of the previous
+iteration.
+
+#### Heredity
+- [Heredity source code](./heredity)
+- [Heredity project](https://cs50.harvard.edu/ai/2020/projects/2/heredity/)
+
+Computes the likelihood of a person having a particular genetic trait by
+stablishing a bayesian network that contains the relationships between family
+members, the unconditional probabilities of having a particular gene, the
+conditional probabilities of having the trait given that a person has `n`
+copies of the gene. And the probabilities of passing a bad gene to a child
+given that a person has `n` copies of the gene.
