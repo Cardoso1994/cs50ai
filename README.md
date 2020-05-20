@@ -50,7 +50,7 @@ order logic
 ### Related Notes
 [Lecture 1 - Knowledge](./lectures/lecture_1_knowledge.md)
 
-#### Realted problem sets
+### Related problem sets
 - Knights
 - Minesweeper
 
@@ -96,7 +96,7 @@ Revision of probability concepts such as:
 - [Lecture 2 - Probability](./lectures/lecture_1_probability.md)
 - [Lecture 2 - Uncertainty](./lectures/lecture_1_uncertainty.md)
 
-#### Realted problem sets
+### Related problem sets
 - PageRank
 - Heredity
 
