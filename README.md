@@ -125,3 +125,23 @@ members, the unconditional probabilities of having a particular gene, the
 conditional probabilities of having the trait given that a person has `n`
 copies of the gene. And the probabilities of passing a bad gene to a child
 given that a person has `n` copies of the gene.
+
+## Lecture 3 - Optimization
+Algorithms:
+- Local search
+- Constraint satisfaction problems
+- Backtracking
+
+### CS50 Resources
+- [Whole Resources](https://cs50.harvard.edu/ai/2020/weeks/3/)
+
+
+### Related Notes
+- [Lecture 3 - Optimization](./lectures/lecture_3_optimization.md)
+
+### Related problem sets
+- Crossword
+
+### Crossword
+- [Crossword source code](./crossword)
+- [Crossword project](https://cs50.harvard.edu/ai/2020/projects/3/crossword/)
