@@ -173,7 +173,6 @@ class CrosswordCreator():
 
         return True
 
-
     def assignment_complete(self, assignment):
         """
         Return True if `assignment` is complete (i.e., assigns a value to each
@@ -215,7 +214,6 @@ class CrosswordCreator():
                     return False
 
         return True
-
 
     def order_domain_values(self, var, assignment):
         """
