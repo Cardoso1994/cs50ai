@@ -145,3 +145,46 @@ Algorithms:
 ### Crossword
 - [Crossword source code](./crossword)
 - [Crossword project](https://cs50.harvard.edu/ai/2020/projects/3/crossword/)
+
+## Lecture 4 - Learning
+Algorithms:
+- Supervised Learning
+    - Nearest Neighbor classification
+    - k-nearest neighbor classification
+    - linear regression
+    - perceptron learning rule
+    - support vector machines
+    - Evaluation Hypotheses
+        - 0-1 loss function
+        - l1 loss function
+        - l2 loss function
+    - Validation
+        - Holdout cross validation
+        - k-fold cross validation
+    - Reinforcement Learning
+      - Markov decision chains
+      - Q-learning
+      - epsilon greedy
+- Unsupervised Learning
+    - Clustering
+        - k-means clustering
+
+
+### CS50 Resources
+- [Whole Resources](https://cs50.harvard.edu/ai/2020/weeks/4/)
+
+
+### Related Notes
+- [Lecture 3 - Optimization](./lectures/lecture_4_learning.md)
+
+### Related problem sets
+- Shopping
+- Nim
+
+### Shopping
+- [Shopping source code](./shopping)
+- [Shopping project](https://cs50.harvard.edu/ai/2020/projects/4/shopping/)
+
+### Nim
+- [Nim source code](./nim)
+- [Nim project](https://cs50.harvard.edu/ai/2020/projects/4/nim/)
