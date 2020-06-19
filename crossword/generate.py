@@ -126,13 +126,6 @@ class CrosswordCreator():
         not_viable = set()
         flag = False
 
-        # debugging prints
-        # print(f"cells: {cells}")
-        # print(f"x domain before: {self.domains[x]}")
-        # print(f"y domain before: {self.domains[y]}")
-        # if not cells:
-        #     return False
-
         for x_option in self.domains[x]:
             for y_option in self.domains[y]:
                 if x_option == y_option:
