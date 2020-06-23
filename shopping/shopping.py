@@ -1,8 +1,14 @@
 import csv
 import sys
 
+import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+
+
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 
 TEST_SIZE = 0.4
 
@@ -59,15 +65,44 @@ def load_data(filename):
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    # replacing months string for numbers
+    shopping_data = pd.read_csv(filename)
+    months = {'Jan':0, 'Feb':1, 'Mar':2, 'Apr':3, 'May':4, 'June':5, 'Jul':6,
+              'Aug':7, 'Sep':8, 'Oct':9, 'Nov':10, 'Dec':11}
+    shopping_data = shopping_data.replace(months)
 
+    # replacing VisitorType for ints [returning = 1, otherwise = 0]
+    shopping_data["VisitorType"] = np.where(shopping_data["VisitorType"] ==
+                                            'Returning_Visitor', 1, 0)
+
+    # replacing Weekend and Revenue bools for ints
+    bool_replacement = {True:1, False:0}
+    shopping_data["Weekend"] = \
+            shopping_data["Weekend"].replace(bool_replacement)
+    shopping_data["Revenue"] = \
+            shopping_data["Revenue"].replace(bool_replacement)
+    evidence = []
+    labels = []
+    for _, row in shopping_data.iterrows():
+        tmp = row.tolist()
+        evidence.append(tmp[:-1])
+        labels.append(tmp[-1])
+
+    scaler = StandardScaler()
+    scaler.fit(evidence)
+    evidence = scaler.transform(evidence)
+
+    return (evidence, labels)
 
 def train_model(evidence, labels):
     """
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    neigh = KNeighborsClassifier(n_neighbors=1)
+    neigh.fit(evidence, labels)
+
+    return neigh
 
 
 def evaluate(labels, predictions):
@@ -85,7 +120,21 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+
+    data_frame = pd.DataFrame({"labels": labels, "predictions": predictions})
+    actual_positive_mask = data_frame["labels"] == 1.0
+    actual_positive = data_frame[actual_positive_mask]
+    sensitivity = (
+        (actual_positive["labels"] == actual_positive["predictions"]).sum()
+                   ) / actual_positive.shape[0]
+    actual_negative_mask = data_frame["labels"] == 0.0
+    actual_negative = data_frame[actual_negative_mask]
+
+    specificity = (
+        (actual_negative["labels"] == actual_negative["predictions"]).sum()
+                  ) / actual_negative.shape[0]
+
+    return (sensitivity, specificity)
 
 
 if __name__ == "__main__":
