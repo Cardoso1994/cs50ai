@@ -213,18 +213,5 @@ def is_in_set(connection, explored):
 
     return False
 
-
-def is_kevin_bacon(person_id):
-    """
-    Checks if a person is Kevin Bacon
-    """
-
-    kevin_id = '102'
-    if person_id == kevin_id:
-        return True
-
-    return False
-
-
 if __name__ == "__main__":
     main()
