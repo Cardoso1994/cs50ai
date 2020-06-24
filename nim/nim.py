@@ -101,7 +101,13 @@ class NimAI():
         Return the Q-value for the state `state` and the action `action`.
         If no Q-value exists yet in `self.q`, return 0.
         """
-        raise NotImplementedError
+        if not self.q:
+            return 0
+
+        state_ = tuple(state)
+
+        return self.q[state_, action] if (state_, action) in self.q.keys() \
+                    else 0
 
     def update_q_value(self, state, action, old_q, reward, future_rewards):
         """
@@ -118,7 +124,10 @@ class NimAI():
         `alpha` is the learning rate, and `new value estimate`
         is the sum of the current reward and estimated future rewards.
         """
-        raise NotImplementedError
+
+        state_ = tuple(state)
+        self.q[state_, action] = old_q + self.alpha \
+                                * (reward + future_rewards - old_q)
 
     def best_future_reward(self, state):
         """
@@ -130,7 +139,16 @@ class NimAI():
         Q-value in `self.q`. If there are no available actions in
         `state`, return 0.
         """
-        raise NotImplementedError
+        if not self.q:
+            return 0
+
+        possible_actions = Nim.available_actions(state)
+        max_Q = 0
+        for action in possible_actions:
+            val = self.q.get((tuple(state), action), 0)
+            max_Q = val if val > max_Q else max_Q
+
+        return max_Q
 
     def choose_action(self, state, epsilon=True):
         """
@@ -147,8 +165,28 @@ class NimAI():
         If multiple actions have the same Q-value, any of those
         options is an acceptable return value.
         """
-        raise NotImplementedError
-
+        possible_actions = Nim.available_actions(state)
+        state_ = tuple(state)
+        q_keys = self.q.keys()
+        action_prev = possible_actions.pop()
+        reward_prev = self.q[state_, action_prev] \
+            if (state_, action_prev) in self.q.keys() else 0
+        for action in possible_actions:
+            if (state_, action) in q_keys \
+                    and self.q[state_, action] > reward_prev:
+                action_prev = action
+                reward_prev = self.q[state_, action]
+        action = action_prev
+        # random:
+        #   0 ---> exploitation
+        #   1 ---> exploration
+        if epsilon and \
+                random.choices([0, 1], [1 - self.epsilon, self.epsilon]).pop():
+            random_actions = list(possible_actions - {action})
+            action = action \
+                if not random_actions \
+                else random.choice(random_actions)
+        return action
 
 def train(n):
     """
