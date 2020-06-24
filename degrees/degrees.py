@@ -18,13 +18,6 @@ def load_data(directory):
     """
     Load data from CSV files into memory.
     """
-    # Load people
-    # FTRINGS
-    #   f"this is a f string"
-    #   fstrings are used to give format for a string.
-    #   is an easy way to embed variables into a string
-    #   In the string below it will put whatever value is in the variable
-    #   "directory"
     with open(f"{directory}/people.csv", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
@@ -104,59 +97,51 @@ def shortest_path(source, target):
     # create a Queue and an explored set
     tree = QueueFrontier()
     explored = set()
+    found = False
 
-    neighbors = neighbors_curated(source)
+    # neighbors = neighbors_curated(source)
+    neighbors = neighbors_for_person(source)
     for neighbor in neighbors:
         #                   source_id, neighbor_id, movie_id
-        tree.add(Node(state=(source, neighbor[1], neighbor[0]),
-                      parent=None, action=neighbor))
-
-    # BFS search to Kevin Bacon. Does nothing if Kevin Bacon is Source
-    current = tree.remove()
-    while True and source != '102':
-        # current = tree.remove()
-        explored.add(current.state)
-        if is_kevin_bacon(current.action[1]):
+        node = Node(state=(source, neighbor[1], neighbor[0]),
+                      parent=None, action=neighbor)
+        if neighbor[1] == target:
+            current = node
+            found = True
             break
+        tree.add(node)
 
-        neighbors = neighbors_curated(current.action[1])
-        for neighbor in neighbors:
-            # add nodes to tree if they aren't already explored
-            if not is_in_set((current.action[1], neighbor[1], neighbor[0]),
-                         explored):
-                tree.add(Node(state=(current.action[1], neighbor[1],
-                                     neighbor[0]),
-                      parent=current, action=neighbor))
+    # BFS search
+    while not tree.empty() and not found:
         current = tree.remove()
 
-    # sanity check in case Kevin Bacon is source
-    if source != '102':
-        tree = QueueFrontier()
-    else:
-        current = tree.remove()
-
-    # BFS to search for target
-    while True:
         if current.action[1] == target:
             break
 
+        # neighbors = neighbors_for_person(current.action[1])
+        # add nodes to tree if they aren't already explored
+        # if node has a solution, break
         neighbors = neighbors_curated(current.action[1])
         for neighbor in neighbors:
-            # add nodes to tree frontier if they aren't already explored
             if not is_in_set((current.action[1], neighbor[1], neighbor[0]),
                          explored):
-                tree.add(Node(state=(current.action[1], neighbor[1],
-                                     neighbor[0]),
-                      parent=current, action=neighbor))
+                node = Node(state=(current.action[1], neighbor[1],
+                                    neighbor[0]),
+                            parent=current, action=neighbor)
+                if node.action[1] == target:
+                    current = node
+                    found = True
+                    break
+                tree.add(node)
+        explored.add(current.state)
 
-        current = tree.remove()
 
     path = deque()
-    while current is not None:
+    while found and current is not None:
         path.appendleft(current.action)
         current = current.parent
 
-    return (list(path))
+    return list(path) if found else None
 
 
 def person_id_for_name(name):
@@ -199,6 +184,7 @@ def neighbors_for_person(person_id):
     return neighbors
 
 
+# Added by Cardoso
 def neighbors_curated(person_id):
     """
     Returns (movie_id, person_id) pairs for people
@@ -220,10 +206,10 @@ def is_in_set(connection, explored):
     """
 
     for node in explored:
-        if connection[0] in node and\
-            connection[1] in node and\
-            connection[2] in node:
-                return True
+        if connection[0] == node[0] and\
+            connection[1] == node[1] and\
+            connection[2] == node[2]:
+            return True
 
     return False
 
