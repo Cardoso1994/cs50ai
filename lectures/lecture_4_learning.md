@@ -295,17 +295,17 @@ Epsilon-greedy algorithm is a way to take into account the balance between
 exploration vs exploitation, it is based on the logic that from time to time we
 would want to make a random movement, instead of performing the best action
 available in our knowledge base. This is useful since there will be times when
-we know a particular set of actions direct us to a good outcome, but it might
-be a better solution out there of which we do not know about, and then, by
-taking random actions we can discover it.
+we know a particular set of actions direct us to a good outcome, but there
+might be a better solution out there of which we do not know about, and then,
+by taking random actions we can discover it.
 
 Epsilon is a probability factor, whenever we want to perform an action, we will
 do it with `(1 - epsilon)` probability of exploiting our knowledge base, and
-we will take a random movemente with probability `epsilon`.
+we will take a random movement with probability `epsilon`.
 
 ### function approximation
 Similar to minimax with depth limit. There will be cases (for example chess or
-go) where computing the values for all Q for all combinations of state-action
+go) where computing the values of all Q for all combinations of state-action
 is a waste of computational resources, if not impossible, in these cases we
 will want to approximate what the outcome, and hence the reward, will be of
 taking a particular action.
