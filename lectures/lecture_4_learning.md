@@ -131,13 +131,13 @@ and start to test the AI.
 This is where support vector machines come in handy, they try to compute the
 "maximum margin separator", which in easier terms means that we are trying to
 maximize the vectors that describe the distance between the data point and our
-threshold boundary. This means that we are trying to get a line that is the 
+threshold boundary. This means that we are trying to get a line that is the
 furthest possible of the majority of the point while still making a good job in
 separating the labels.
 
 Support vector machines can work in higher dimenssions, for which these
 algorithms are not limited to a line boundary, they can achieve different forms
-in order to separate the labels.
+in order to separate the different labels.
 
 ### Regression
 There are cases when we don't want lo label a reuslt as a discrete value
