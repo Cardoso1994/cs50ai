@@ -175,7 +175,7 @@ Algorithms:
 
 
 ### Related Notes
-- [Lecture 3 - Optimization](./lectures/lecture_4_learning.md)
+- [Lecture 4 - Learning](./lectures/lecture_4_learning.md)
 
 ### Related problem sets
 - Shopping
