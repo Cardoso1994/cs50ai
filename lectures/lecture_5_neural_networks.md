@@ -34,10 +34,41 @@ gradient descent operation.
 In calculus, the gradient returns a vector with the direction of fastest
 increase of a particular variable. By analizing it in the inverse manner we can
 obtain the direction in which the decrease is the fastest. Applying this
-concept to our neural networks understanding
-- all data points vs stochastic gradient descent (one data point at a time) vs
-    mini-batch gradient descent (small batch)
+concept to our neural networks gives us an understanding about in which
+directions the weights should be updated in order to minimize the loss function
+the fastest way possible.
 
+This is an iterative process, so in every iteration the weights of every edge
+are modified in a little ammount in the direction specified by the gradient
+
+There are many kinds of gradient descent algorithms, the original one computes
+the gradient descent for ALL DATA POINTS in the data set, this kind of
+algorithm can consume a lot of time since it works for every data point in
+every iteration, because of that there might be other algorithm that might work
+better for us. The first example is Stochastic Gradient Descent, in this form
+of the algorithm we take one data point for every iteration to compute the
+gradient, this is less exact but on the other hand works faster. A second
+example is the Mini-Batch Gradient Descent which tries to give a balance
+between the 2 previous methods, by selecting in every iteration a small batch
+of the data points to comput the gradient.
+
+### Multiple outputs
+Until now, we have only talk about neural networks with one unit in the output
+layer, but this is not a rigid fact, we can in fact have multiple outputs. This
+is useful in for example classification tasks for more than two classes, it
+also has been found useful in reinforcement learning, where each output unit
+represents a given action from the set of actions available for a particular
+state, and the value of every output unit specifies a value of how good an
+action is.
+
+A neural network with more than one output can be seen, and trained, as if
+there were n(n == numer of outputs) independent neural networks, each one of
+them with its particular edges and weights that connect the inputs with the
+output.
+
+### Deep Learning
+So far, neural networks with two layers, one for inputs and one for outputs,
+have been discussed. 
 - multiple outputs
 - multiple layers
 
