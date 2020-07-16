@@ -68,7 +68,12 @@ output.
 
 ### Deep Learning
 So far, neural networks with two layers, one for inputs and one for outputs,
-have been discussed. 
+have been discussed. These neural networks work fine, but have some
+limitations, for example in a classification task, say for example the weather
+for a particular day, we might want to know if it is gonna be rainy or sunny, 
+a neural network with only an input and output layers will only be able to
+classify stuff when there is a linear boundary relation that separates the
+groups of classification. This is analogous to the perceptron rule.
 - multiple outputs
 - multiple layers
 
