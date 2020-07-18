@@ -74,13 +74,61 @@ for a particular day, we might want to know if it is gonna be rainy or sunny,
 a neural network with only an input and output layers will only be able to
 classify stuff when there is a linear boundary relation that separates the
 groups of classification. This is analogous to the perceptron rule.
-- multiple outputs
-- multiple layers
 
-- supervised learning, reinforcement learning
-- perceptron (analogous to layers)
+In conclussion, a neural network with just an output and input layer can only
+work with linear relationships, which in turns, is not ideal since most data in
+real world does not behave linearly. There might be for example, some data
+where the boundaries are in form of circles.
 
-- backpropagation (piedra angular of neural networks)
-- deep neural networks (deep learning)
-- overfitting
-    - dropout
+In order to overcome this, deep neural networks were developed, the
+particularity of DNN are that they have one or more hidden layers between the
+input and output layers, giving us the ability to analyze more complex data.
+This technique is commonly known as Deep Learning.
+
+The basic idea is that in every hidden layer the neural network learns some
+particular pattern(s) and delegates the rest of the work to the next layers.
+
+#### Backpropagation
+In deep learning the gradient descent algorithm is still a valid approach. But
+it becomes a more complex problem, since every layer connects to the next one
+with edges that come out of its units with a particular weight, so we have much
+more weights to update. It is also important to remark that the loss function
+is only computed for the output layer, which only gives us the ability to
+update based on that information the weights of the last hidden layer.
+
+Therefore it is necessary to found a way to update appropiately the weights
+involved in the hidden layers, and this is where Backpropagation comes to
+picture, it is a technique in which we try to compute wich percentage / amount
+of the error comes from which unit on the previous layer, and keep doing the
+same to the previous unit and so on, until we reach the input layer, this way
+we can know which edges (for every layer) and in which ammount need to be
+updated.
+
+#### Overfitting
+As we saw in the machine learning lecture (lecture 4), overfitting may become a
+huge problem for our algorithms as they start to work with test data.
+Overfitting is what happens when our model was trained to fit "very well" the
+data set, which sometimes lead to a point where the AI is no longer available
+to generalize its predictions to other data sets.
+
+When working with neural networks, the way to prevent overfitting is via a
+technique called DROPOUT that consists in dropping out some random units of the
+neural network in every iteration and do the training process in that iteration
+as if those dropped units weren't part of the network at all. At the next
+iteration those units are restored and new randomly picked units are dropped
+out, and so on. The general idea is that by dropping out units at random, we
+eliminate the risk of relaying too much in one particular unit, which in turn
+results in a better generalization of the neural network.
+
+### Computer Vision
+#### Image Convolution
+- kernel
+- feature map
+
+#### Pooling
+- max pooling
+
+#### Convolutional Neural Networks
+
+
+### Recurrent neural network
