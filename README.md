@@ -203,10 +203,8 @@ Algorithms:
 
 ### Related Notes
 - [Lecture 5 - Neural Networks](./lectures/lecture_5/neural_networks.md)
-- [Lecture 5 - Convolution and Pooling]
-        (./lectures/lecture_5/convolution_pooling.md)
-- [Lecture 5 - Activation Functions]
-        (./lectures/lecture_5/activation_functions.md)
+- [Lecture 5 - Convolution and Pooling](./lectures/lecture_5/convolution_pooling.md)
+- [Lecture 5 - Activation Functions](./lectures/lecture_5/activation_functions.md)
 
 ### Related problem sets
 - Traffic
