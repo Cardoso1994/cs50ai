@@ -188,3 +188,30 @@ Algorithms:
 ### Nim
 - [Nim source code](./nim)
 - [Nim project](https://cs50.harvard.edu/ai/2020/projects/4/nim/)
+
+## Lecture 5 - Neural Networks
+Algorithms:
+- Articial Neural Networks
+- Gradient Descent
+- Deep Learning
+- Backpropagation
+- Convolutional Neural Networks (computer vision)
+- Recurrent Neural Networks
+
+### CS50 Resources
+- [Whole Resources](https://cs50.harvard.edu/ai/2020/weeks/5/)
+
+### Related Notes
+- [Lecture 5 - Neural Networks](./lectures/lecture_5/neural_networks.md)
+- [Lecture 5 - Convolution and Pooling]
+        (./lectures/lecture_5/convolution_pooling.md)
+- [Lecture 5 - Activation Functions]
+        (./lectures/lecture_5/activation_functions.md)
+
+### Related problem sets
+- Traffic
+
+### Shopping
+- [Traffic source code](./traffic)
+- [Traffic project](https://cs50.harvard.edu/ai/2020/projects/5/traffic/)
+
