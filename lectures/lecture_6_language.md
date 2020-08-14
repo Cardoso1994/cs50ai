@@ -106,26 +106,135 @@ concepts are defined, we can start to feed data to the machine learning
 program. A particular algorithm for formal grammar is "Context-Free Grammar".
 
 ### Context-Free Grammar
-- terminal symbol
-- non-terminal symbol
-N
-D
-ADJ
-P
-NP
-VP
--nltk
+Context-Free Grammar is a set of rules in which we relate every word to a
+concept, for example a word like "she" will be related to the concept "Noun".
+This allows us to divide the phrase into multiple subparts, and analyze it by
+the components of it instead of the words that make the phrase. For example:
+
+-She    saw     the     city
+  |      |       |        |
+- N      V       D        N
+
+the example above translates every english word into a "concept". The formal
+term to refer to concepts is _"Terminal Symbol"_, whereas we refer to a word as
+a _"Non-Terminal Symbol"_. This allows to give to the AI the ability to
+understand phrases in a general way by following this structure. There are many
+kind of terminal symbols, for example:
+- N -> Noun
+- V -> Verb
+- D -> Determinant
+- ADJ -> adjective
+- P -> preposition
+
+In order to provide the machine with some "knowledge", we create some sort of
+dictionary (in a pythonic sense):
+
+N -> she | city | car | Marco | Harry | ...
+V -> saw | ate | walked | run | ...
+D -> the | a | an | ...
+P -> to | on | over | ...
+ADJ -> blue | busy | old | ...
+
+We can also start to make more complex Terminal Symbols:
+
+NP -> N | D N
+
+where NP stands for "noun phrase" and it tells us that a noun phrase can be
+formed by a noun, for example "car", or it can also be formed by a determinant
+and a noun, for example "the city". This allows for more complex analysis of
+the phrases, an a more accurate representation of natural language, in this
+particular case english.
+
+            NP                   NP
+           /  \                  |
+          /    \                 |
+         /      \                |
+        D        N               N
+        |        |               |
+        |        |               |
+       the      city            she
+
+From this, we start creating other ideas such as verb phrases and sentences:
+
+VP -> V | V NP
+S -> NP VP
+
+### NLTK
+Nltk is a python module developed with natural language processing in mind, and
+it provides an easy use for Context-Free grammar, it even shows a graphic
+representation of the te terminal symbols that make a given sentence.
+
+This can be seen in the cs50 lectures.
 
 ## ngram
-### character n-gram
-### word n-gram
-### unigram
-### bigram
-### trigram
+The n-gram is a technique in which we separate a given part of text into
+subsets, or "n-grams". The "gram" could be a whole text, which is divided into
+pargraphs, maybe it would be a complete sentence separated into words, or maybe
+it is a simple word separated into characters.
+
+When we separate a word into characters we are doing a _"character n-gram"_,
+and when we separate a sentence into words it is calles _"word n-gram"_. There
+is also another possible classification, which is by how many "grams" are we
+taking to be analyzed, this could be a _"unigram"_ for one character/word, a
+_"bigram"_ for two, _"trigram"_ for three and so on.
+
+More formally, an N-GRAM is defined as:
+- "A contiguous sequence of n items from a sample text"
+
+An example for a trigram would be, from the sentence below:
+"How often have I said to you that when you have eliminated the impossible
+whatever remains, however improbable, must be the truth?"
+
+for this expression, the trigrams would be groupped as follows:
+- How often have
+- often have I
+- have I said
+- I said to
+- said to you
+- ...
+
 ### tokenization
-- challenges of tokenization
-- ngrams can be modeled with markov models
-- markovify
+Tokenization is the result of splitting a given set of characters into
+subpieces (tokens). There are many kinds of tokenization, for example word
+tokenization, in which we divide a text into words, and character tokenization
+in which we divide a word into characters.
+
+There are many challenges that arise when dealing with tokenization, for
+example, when doing word tokenization the first challenge is to determine where
+we are splitting each word. The naive approach would be to separate words
+whenever we find a blank space, but this may have some consequences, from the
+example above, a word tokenization would be:
+
+- ["How", "often", "have", "I", "said", ..., "whatever", "remains,", ...]
+
+from this we see that the word "remains," has been splitted along with the
+comma, which will result in the AI trating different this word "remains," as a
+complete different word of "remains". So it is important to take into account
+also punctuation signs.
+
+In another example, let's say we want a sentence tokenization over a paragraph,
+the naive approach would be to split sentences whenever we find a period ("."),
+but this would also represents a problem, if we have a sentence:
+
+- "I cannot waste time over this sort of fantastic talk, Mr. Holmes. If you can
+chatch the man,catch him, and let me know when you have done it"
+
+a problem will arise with the word "Mr." because in our naive approach the
+senences would be
+- "I cannot waste time over this sort of fantastic talk, Mr."
+- "Holmes."
+- "If you can chatch the man,catch him, and let me know when you have done it"
+
+Ngrams are useful because they allow the AI to know which words usually come
+after a particular word or a particular set of words, which in turn could be
+modeled as a markov chain, in which the AI has a probability distribution of
+which words is most proable to come after a single word, or maybe after a set
+of two, three or even more words.
+
+A library that allows the modeling of ngrams as markov chains is "markovify".
+An application of this would be to generate text that looks like some
+particular individual has written, maybe some lyrics that a rock band may have
+written, or maybe some phrases that a famous author would write.
 
 ## Text Cateogrization
 ### Sentiment Analysis
