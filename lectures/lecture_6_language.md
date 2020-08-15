@@ -237,7 +237,33 @@ particular individual has written, maybe some lyrics that a rock band may have
 written, or maybe some phrases that a famous author would write.
 
 ## Text Cateogrization
+Another application of natural language processing is in text categorization,
+in which the AI will attempt to give a concise result about a particular text
+that has been passed to it. A good example is Sentiment Analysis. It is also a
+useful tool to mail servers, the main application is to decide if a received
+mail is spam or is it a legit email.
+
 ### Sentiment Analysis
+Sentiment Analysis goal is to tell wether a text is about something happy,
+something sad, maybe the people talking is angry, etc.
+
+The most common algorithm for this task is the "bag-of-words model", which
+gives a particular word a classification, then it analyzes some text word by
+word, and if it encounters a word that has been classified as good, it will
+output that this particular text is good. A good example of this is to classify
+reviews in webpages such as amazon, ebay, etc. The reviews can be classified as
+"good" or "bad".
+
+A sample of reviews could be:
+- "My grandson loved it! So much fun!"
+- "Product broke after a few days"
+- "One of the best games I've played in a long time"
+- "Kind of cheap and flimsy, not worth it"
+
+from these examples and with the "bag-of-words model" our AI would classify the
+first review as good, since it has the words ["loved", "fun"] in it. The second
+review would be classified as bad because the word "broke" is in it.
+
 - bag-of-words model
 - naive bayes
     Baye's Rule
