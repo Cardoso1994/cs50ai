@@ -264,19 +264,87 @@ from these examples and with the "bag-of-words model" our AI would classify the
 first review as good, since it has the words ["loved", "fun"] in it. The second
 review would be classified as bad because the word "broke" is in it.
 
-- bag-of-words model
-- naive bayes
-    Baye's Rule
-    P[ :) ]
-    P[ :( ]
-    independent events for any word in a review
-    P(positive review)
-    P(word | positive)
-    P(word | negative)
-    normalize
-    if zero probability for a word?
-        - additive smoothing
-        - laplace smoothing
+Another approach to make classification is the "Naive Bayes Algorithm", which
+bases all of its logic in the application of the Baye's theorem, and its goal
+is to give a probability distribution of wether a particular text is, in the
+same "reviews" example, a good or a bad review.Or in other words, the AI will
+tell us if it thinks a particular review is a good review, with a given level
+of certainty.
+
+- P[ :) ]
+- P[ :( ]
+
+The way Naive-Bayes approaches a problem is by taking every word in a sentence
+as an independent event from the other words, this in realitiy might not be
+true, but it gives a very good approximation in the results. For example, in
+the sentence:
+
+- "My grandson loved it!"
+
+the Bayes Theorem would state:
+`P[ ":)" | ["My", "grandson", "loved", "it"]]` -> probability of a good review
+                                                given "My grandson..."
+this is equal to
+`P(["My", "grandson", "loved", "it"] | ":)") * P (":)") / P(["My", "grandson", "loved", "it"])`
+
+which in turn is proportional to
+`P(["My", "grandson", "loved", "it"] | ":)") * P (":)")`
+
+The Naive Bayes algorithm takes this simplication one step further, by stating
+that, all of this is proportional to
+`P(":)" | "My") * P(":)" | "grandson") * P(":)" | "loved") * P(":)" | "it!") `
+
+this is achieved, as stated before, by treating every word as an independent
+event from the rest of the words.
+
+The way to obtain the probability distributions with a provided data set, is as
+follows:
+```
+    P(":)") = total_positive_reviews / total reviews
+    P("given_word" | ":)") = total_positive_reviews_with_word /
+                                    total_positive_reviews
+```
+the same formulas apply for the negative cases. The next table describes the
+example discussed in the lecture, giving the probability distribution for the
+example in question:
+
+:) | :(
+--------
+0.49 | 0.51
+
+            | :)    | :(
+----------------------------
+My          | 0.30  | 0.20
+grandson    | 0.01  | 0.02
+loved       | 0.32  | 0.08
+it          | 0.30  | 0.40
+
+From the above tables we get:
+```
+P(":)") * P("My" | ":)") * P("grandson" | ":)") * P("loved" | ":)") * P("it" | ":)")
+    = 0.49 * 0.30 * 0.01 * 0.32 * 0.30 = 0.00014112
+P(":(") * P("My" | ":(") * P("grandson" | ":(") * P("loved" | ":(") * P("it" | ":(")
+    = 0.51 * 0.20 * 0.02 * 0.8 * 0.40 = 0.00006528
+```
+
+If we normalize the results (making them to sum up to 1) we get:
+```
+P(":)") = 0.6837
+P(":(") = 0.3163
+```
+
+According to the Naive Bayes algorithm, and with the provided data set, tells
+us that this review is positive with a probability of 68%.
+
+Now, there might be ocassions when Naive Bayes will only crash, an example
+could be when we rty to analize a word that didn't appear a single time in the
+data set. If this should ever happen, the proability of that word will be zero,
+hence making the conjunction probability also zero, there are many ways to make
+front to this problem. The first one is called "Additive Smoothing" in which we
+always add a value "\alpha" to each value in the distribution. The second one
+is "Laplace smoothing", in this approach we add 1 to every value in our
+distribution, this is like pretending we saw that word one more time than we
+actually have.
 
 ## Information retrieval
 ### topic modeling
