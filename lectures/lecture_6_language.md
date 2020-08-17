@@ -347,26 +347,185 @@ distribution, this is like pretending we saw that word one more time than we
 actually have.
 
 ## Information retrieval
-### topic modeling
-### term frequency
-- function words
-- content words
-- ignore function words
+This refers to the task to retrieve information about a given text to the user.
+In this application, there are many kinds of algorithms, such as topic
+modeling.
+
+
+### Term frequency
+Term frequency is technique in which we analyze a text word by word, and
+retrieve the most common ones, with the hope of getting some insight of the
+main theme of the text, or the most significan aspect of it. It simply return
+the number of times the AI saw a particular term, it may return it as a integer
+number, or maybe as a percentage.
+
+The main difficulty one might encounter when developing a term frequency
+program is that of retrieving "menaingless" terms, which are words with little
+to no meaning on their own, but gramatically neceary to connect other words,
+such words are called "Function Words". Examples of function words can be:
+- "the"
+- "a"
+- "by"
+- "an"
+- "is"
+- ...
+
+On the other hand, there are words that carry most of the meaning of a given
+phrase or text, this words are called "Content Words". These words are the ones
+that we are looking for, example of these are:
+- "algorithm"
+- "category"
+- "computer"
+- "president"
+- "impeachment"
+- ...
+
+A good way to eliminate the appearance of function words in the results
+retrieved, is by providing a list of those function words, and have the AI to
+check every possible result against that list, and only retrieve a given word
+as a result if it does not appear in the function words list.
+
+But still there are other problems that we need to take into account. For
+example when analyzing many documents at a time.
 
 ### Inverse document frequency
-idf = log ((docs with word) / (total docs))
+An example given in lecture was that of trying to get the main topic about all
+of the Sherlock Holmes stories, with the previous approach words like
+`["Sherlock", "Holmes"]` will appear as one of the most important terms for all
+of the stories, which may not be of big use since we know in advance that
+Sherlock Holmes is the main character. With this in mind, "Inverse Document
+Frequency" was developed.
+
+The main idea of "idf" is that of checkin between the most important terms
+obtained for a particular document, which ones of those DO NOT appear in the
+rest of the documents. This is because an important term that does not appear
+in other documents MUST be what makes a particular document unique.
+
+```
+idf = log [(docs with word) / (total docs)]
+```
 
 ## Semantics
 ### Information extraction
-- Templates when {sth} was founded in {sth}"
+Information extraction refers to the act of extracting knowledge from a text.
+The idea is that given some particular template to the AI, the program can
+parse a text in search for similar patterns and retrieving this found patterns
+to the user, hence giving back some new knoledge.
+
+An example for a template would be:
+- "when {sth} was founded in {sth}"
+for example:
+- "when _Facebook_ was founded in _2004_"
+
+by giving the AI this template, and providing a text data base to search in,
+the AI may give us back results such as:
+- "when _Amazon_ was founded in _1994_"
+
+This kind of algorithms work, not only with this particular template, one, for
+example, can give a template such as:
+- {Athens, 2004}
+- {London, 2012}
+- {Rio, 2016}
+
+and then parse the olympic games webpage to the program, and the AI will search
+for patterns where the elements of the template are found, and retrieve
+information (conclussions) about other olympic games in the form `{location,
+year}`, whenever it finds similar patterns in the data given.
 
 #### WordNet Dataset
+A very famous data set is the WordNet dataset, which is a huge effort on
+labeling words such as nouns, verbs, adjectives among others, into conginitve
+synonims (synsets). These synsents are linked by semantical and lexical
+relations.
+More on [WordNet's site](https://wordnet.princeton.edu/)
 Definitions of words
 
 #### Word Representation
-- one-hot representation (vectors of 1 and 0's)
-- distribution representation
-- word2vec
-    - vector representation
-    - skip-gram architecture (NN)
-    - distance between words
+The most complex kind of semantics analysis is Word Representation, in which
+every word in a given data set has a unique numerical representation, normally
+in the form of a vector. This is useful, because this representation can be
+obtained and applied in a neural network.
+
+### One-Hot Representation
+One-hot representation is the easiest way to give words a numerical
+representation, the only task to do is to create a vector of size `N`, where
+only one element will have a value of `1`, and the rest of the elements will be
+`0`.
+
+For example, in the phrase:
+- "He wrote a book"
+    - "He"      [1, 0, 0, 0]
+    - "wrote"   [0, 1, 0, 0]
+    - "a"       [0, 0, 1, 0]
+    - "book"    [0, 0, 0, 1]
+
+This, as easy as it may be, is not an optimal approach since there are many
+problems that will arise, the first one and most obvious is that of the huge
+ammount of memory used, also most of that memory allocated by the program will
+be filled with pure `0's`. Another important fact is that of the lack of tha
+capability of implying some sort of similarity between words, for example:
+- "book"    [0, 0, 1, 0, ..., 0]
+- "novel"   [0, 0, ..., 1, 0, 0]
+
+"book" and "novel" are words that in most contexts will work as synonims but in
+a one-hot representation they will be tow completely different structures, with
+no hint of a possible link between them.
+
+### Distribution Representation
+This approach excels at giving some sort of relation between certain groups of
+words. It works by making a distribution of values along a vector, instead of
+only having `ones and zeros`. For example:
+- "He wrote a book"
+    - "He"      [-0.34, -0.08, 0.02, -0.18, 0.22, ...]
+    - "wrote"   [-0.27, 0.40, 0.00, -0.65, - 0.15, ...]
+    - "a"       [-0.12, -0.25, 0.29, -0.09, 0.40, ...]
+    - "book"    [-0.23, -0.16, -0.05, -0.57, ...]
+
+This allows the AI to make some inference about the position of particular
+words in a given sentence, for example:
+- "for `_______` he ate"
+    - the blank space can be filled with different words such as
+        ["dinner", "breakfast", "lunch"]
+
+### word2vec
+Word vector is a model to generate vector model for words, such as the previous
+example, words will have a particular numerical representation, with different
+values distributed along the elements of the vector. The advantage of this
+approach is that similar words are given similar vector values (magnitude), so
+words like `["wrote", "authored", ...]` will have a very similar vector
+representantion.
+
+The most amazing part of `word2vec` is that it gives the ability of making
+mathematical operations on words, and also between words, so now, things like
+adding two words are possible and in fact have a particular meaning and use
+when treating them as numbers, whereas there is no logic way in which one could
+add two words, in a string representantion sort of way.
+
+#### Skip-gram architecture
+Is a neural network architecture used for predicting a context word given a
+target word. this will allow to get some values for different words given a
+particular vector representation.
+
+For example, if we define a function for computing the distance between words,
+we now have the ability to find synonims of a word by taking the closest ones
+to it. We can get any kind of relation, as long as it is well defined, for
+example:
+
+- "king" - "man" = `[some_vector]`
+if we add this new value of the difference `"king" - "man"` to a word like
+`"woman"`, theway of perform that would be:
+```python
+diff_king_man = "king" - "man"
+woman_plus_diff = "woman" + diff_king_man
+result = closest_word_to(woman_plus_diff)
+
+# print result
+print(f"the result is: {result}")
+```
+
+which should print:
+- `queen`
+
+There can be any kind of relation to be analyzed, for example one can get the
+relation between `{England, London}` and add it to `{France}` and hopefully get
+as result `{Paris}`.
