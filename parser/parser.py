@@ -15,17 +15,13 @@ V -> "arrived" | "came" | "chuckled" | "had" | "lit" | "said" | "sat"
 V -> "smiled" | "tell" | "were"
 """
 
-"""
-I had a country walk on Thursday and came home in a dreadful mess.
-"""
-
 NONTERMINALS = """
 S -> SS | SS Conj SS
 
 SS -> NP VP | NP | VP
 
-NP      -> N | AdjP | DetP | PP Adv | DetP PP | N PP | PP
 VP      -> V | V NP | V Adv | Adv V NP
+NP      -> N | AdjP | DetP | PP Adv | DetP PP | N PP | PP
 PP      -> P N | N P | DetP P | P DetP | P AdjP
 DetP    -> Det AdjP | Det N | Det N PP
 AdjP    -> Adj N | Adj Ajd N | Adj Adj Adj N
@@ -77,7 +73,7 @@ def preprocess(sentence):
     """
     # list comprehension rocks!
     return [word.lower() for word in nltk.tokenize.word_tokenize(sentence)
-            if bool(re.search("[a-zA-Z]+", word))]
+            if re.search("[a-zA-Z]+", word)]
 
 
 def np_chunk(tree):
@@ -87,7 +83,11 @@ def np_chunk(tree):
     whose label is "NP" that does not itself contain any other
     noun phrases as subtrees.
     """
-    return []
+    chunks = []
+    for subtree in tree.subtrees():
+        if subtree.label() == 'NP':
+            chunks.append(subtree)
+    return chunks
 
 
 if __name__ == "__main__":
