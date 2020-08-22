@@ -3,6 +3,7 @@ import sys
 import os
 import string
 import re
+import math
 
 FILE_MATCHES = 1
 SENTENCE_MATCHES = 1
@@ -70,7 +71,7 @@ def tokenize(document):
     punctuation or English stopwords.
     """
 
-    document = [word.lower() for word in nltk.word_tokenize(document)]
+    document = [word for word in nltk.word_tokenize(document.lower())]
     words = []
     for word in document:
         for char in string.punctuation:
@@ -79,9 +80,6 @@ def tokenize(document):
 
         if word != '' and word not in nltk.corpus.stopwords.words("english"):
             words.append(word)
-
-    print(words)
-    exit(12)
 
     return words
 
@@ -94,7 +92,19 @@ def compute_idfs(documents):
     Any word that appears in at least one of the documents should be in the
     resulting dictionary.
     """
-    raise NotImplementedError
+
+    whole_words = get_all_words(documents)
+    total_docs = len(documents)
+    idfs = {}
+
+    for word in whole_words:
+        count = 0
+        for document in documents:
+            if word in documents[document]:
+                count += 1
+        idfs[word] = math.log(total_docs / count)
+
+    return idfs
 
 
 def top_files(query, files, idfs, n):
@@ -104,7 +114,22 @@ def top_files(query, files, idfs, n):
     to their IDF values), return a list of the filenames of the the `n` top
     files that match the query, ranked according to tf-idf.
     """
-    raise NotImplementedError
+
+    tf_idf  = []
+    top_files = []
+    for file in files:
+        count = 0
+        for word in query:
+            if word not in idfs:
+                pass
+            count += files[file].count(word) * idfs[word]
+        top_files.append(file)
+        tf_idf.append(count)
+
+    tf_idf, top_files = zip(*sorted(zip(tf_idf, top_files),
+                                        key=lambda x: x[0], reverse=True))
+
+    return top_files[:n]
 
 
 def top_sentences(query, sentences, idfs, n):
@@ -115,8 +140,24 @@ def top_sentences(query, sentences, idfs, n):
     the query, ranked according to idf. If there are ties, preference should
     be given to sentences that have a higher query term density.
     """
-    raise NotImplementedError
+    for sentence in sentences:
+        print(sentence)
+        print(sentences[sentence])
 
+    exit(12)
+
+def get_all_words(documents):
+    """
+    Given a dictionary of `documents` that maps names of documents to a list of
+    words, returns a set of all the words present in all documents combined
+    """
+
+    words = set()
+    for document in documents:
+        for word_ in documents[document]:
+            words.add(word_)
+
+    return words
 
 if __name__ == "__main__":
     main()
