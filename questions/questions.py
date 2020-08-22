@@ -25,7 +25,8 @@ def main():
     file_idfs = compute_idfs(file_words)
 
     # Prompt user for query
-    query = set(tokenize(input("Query: ")))
+    # query = set(tokenize(input("Query: ")))
+    query = set(tokenize("whEn WAs pytHon 3.0 releaSED?"))
 
     # Determine top file matches according to TF-IDF
     filenames = top_files(query, file_words, file_idfs, n=FILE_MATCHES)
@@ -71,8 +72,9 @@ def tokenize(document):
     punctuation or English stopwords.
     """
 
-    document = [word for word in nltk.word_tokenize(document.lower())]
-    words = []
+    document    = [word for word in nltk.word_tokenize(document.lower())]
+    words       = []
+
     for word in document:
         for char in string.punctuation:
             if char in word:
@@ -94,15 +96,16 @@ def compute_idfs(documents):
     """
 
     whole_words = get_all_words(documents)
-    total_docs = len(documents)
-    idfs = {}
+    total_docs  = len(documents)
+    idfs        = {}
 
     for word in whole_words:
         count = 0
         for document in documents:
             if word in documents[document]:
                 count += 1
-        idfs[word] = math.log(total_docs / count)
+        if count > 0:
+            idfs[word] = math.log(total_docs / count)
 
     return idfs
 
@@ -115,20 +118,19 @@ def top_files(query, files, idfs, n):
     files that match the query, ranked according to tf-idf.
     """
 
-    tf_idf  = []
-    top_files = []
+    tf_idf      = []
+    top_files   = []
+
     for file in files:
         count = 0
-        for word in query:
-            if word not in idfs:
-                pass
+        word_gen = (word for word in query if word in files[file])
+        for word in word_gen:
             count += files[file].count(word) * idfs[word]
         top_files.append(file)
         tf_idf.append(count)
 
     tf_idf, top_files = zip(*sorted(zip(tf_idf, top_files),
                                         key=lambda x: x[0], reverse=True))
-
     return top_files[:n]
 
 
@@ -140,11 +142,52 @@ def top_sentences(query, sentences, idfs, n):
     the query, ranked according to idf. If there are ties, preference should
     be given to sentences that have a higher query term density.
     """
-    for sentence in sentences:
-        print(sentence)
-        print(sentences[sentence])
 
-    exit(12)
+    top_sent   = []
+    mwm         = []
+    qtd         = []
+
+    # compute matching word measure and query term density
+    for sentence in sentences:
+        mwm_ = 0
+        qtd_ = 0
+        word_gen = (word for word in query if word in sentences[sentence])
+        for word in word_gen:
+            mwm_ += idfs[word]
+            qtd_ += sentences[sentence].count(word) / len(sentences[sentence])
+        top_sent.append(sentence)
+        mwm.append(mwm_)
+        qtd.append(qtd_)
+
+    # sorting with matching word measure
+    top_sent, mwm, qtd = zip(*sorted(zip(top_sent, mwm, qtd),
+                                     key=lambda x: x[1], reverse=True))
+    top_sent = list(top_sent)
+    mwm = list(mwm)
+    qtd = list(qtd)
+
+    # sorts all repeated mwm elements, if any
+    # and puts them back in original lists
+    i = 0
+    len_mwm = len(mwm)
+    while i < len_mwm:
+        mwm_ = mwm[i]
+        j = i + 1
+        while j < len_mwm and mwm_ == mwm[j]:
+            j += 1
+        if j - i > 1:
+            short_top_sent = top_sent[i : j]
+            short_mwm = mwm[i : j]
+            short_qtd = qtd[i : j]
+            short_top_sent, short_mwm, short_qtd = \
+                zip(*sorted(zip(short_top_sent, short_mwm, short_qtd),
+                            key=lambda x: x[2], reverse=True))
+            top_sent[i : j] = short_top_sent
+            mwm[i : j] = short_mwm
+            qtd[i : j] = short_qtd
+        i = j
+
+    return top_sent[:n]
 
 def get_all_words(documents):
     """
